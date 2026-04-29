@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentence Lab — Hidden Figures</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b4b;
+    --gold: #f5c842;
+    --gold-dark: #d4a800;
+    --sky: #5ec4f0;
+    --sky-light: #ddf3fc;
+    --green: #2ec97e;
+    --green-light: #d4f7e8;
+    --pink: #ff6fa8;
+    --pink-light: #ffe0ee;
+    --orange: #ff8c42;
+    --white: #ffffff;
+    --bg: #f0f6ff;
+    --card: #ffffff;
+    --text: #1a2340;
+    --muted: #6b7a99;
+    --border: #c8d8f0;
+    --radius: 18px;
+    --shadow: 0 4px 24px rgba(13,27,75,0.10);
+    --shadow-lg: 0 8px 40px rgba(13,27,75,0.16);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .header-stars {
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px),
+      radial-gradient(circle, rgba(245,200,66,0.6) 1px, transparent 1px);
+    background-size: 60px 60px, 90px 90px;
+    background-position: 0 0, 30px 30px;
+    opacity: 0.3;
+    animation: twinkle 4s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle { from { opacity: 0.2; } to { opacity: 0.45; } }
+  .header-inner {
+    position: relative; z-index: 1;
+    max-width: 860px; margin: 0 auto;
+    padding: 28px 20px 22px;
+    display: flex; align-items: center; gap: 18px;
+  }
+  .rocket-icon {
+    font-size: 3rem;
+    animation: rocket-bob 2.5s ease-in-out infinite;
+  }
+  @keyframes rocket-bob {
+    0%, 100% { transform: translateY(0) rotate(-10deg); }
+    50% { transform: translateY(-6px) rotate(-10deg); }
+  }
+  .header-text h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.5rem, 5vw, 2.4rem);
+    color: var(--gold);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+  }
+  .header-text p {
+    color: #b8cfe8;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .header-badge {
+    margin-left: auto;
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    padding: 8px 18px;
+    border-radius: 50px;
+    white-space: nowrap;
+    box-shadow: 0 2px 10px rgba(245,200,66,0.4);
+  }
+
+  /* ── TABS ── */
+  .tabs-bar {
+    background: var(--navy);
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .tabs-inner {
+    max-width: 860px; margin: 0 auto;
+    display: flex; gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs-inner::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    background: none; border: none; cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem; font-weight: 700;
+    color: #7a9cc8;
+    padding: 12px 18px;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tab-btn:hover { color: var(--white); }
+  .tab-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  /* ── MAIN CONTAINER ── */
+  main {
+    max-width: 860px; margin: 0 auto; padding: 28px 16px 0;
+  }
+
+  /* ── SECTION ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── INTRO CARD ── */
+  .intro-card {
+    background: linear-gradient(135deg, var(--navy) 0%, #1a3580 100%);
+    border-radius: var(--radius);
+    padding: 24px 26px;
+    margin-bottom: 22px;
+    color: var(--white);
+    position: relative; overflow: hidden;
+  }
+  .intro-card::after {
+    content: '🚀 ✨ ⭐ 🌟';
+    position: absolute; right: 20px; top: 16px;
+    font-size: 1.6rem; opacity: 0.3; letter-spacing: 4px;
+  }
+  .intro-card h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.35rem; color: var(--gold); margin-bottom: 6px;
+  }
+  .intro-card p { font-size: 0.95rem; color: #c0d5f0; line-height: 1.6; }
+
+  /* ── PROFILE CHIPS ── */
+  .profile-row {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 22px;
+  }
+  .profile-chip {
+    background: var(--card);
+    border: 2.5px solid var(--border);
+    border-radius: 50px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.88rem;
+    display: flex; align-items: center; gap: 7px;
+    transition: all 0.2s; box-shadow: var(--shadow);
+  }
+  .profile-chip:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .profile-chip.selected {
+    border-color: var(--gold-dark);
+    background: var(--gold);
+    color: var(--navy);
+    box-shadow: 0 4px 16px rgba(245,200,66,0.4);
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--border);
+  }
+  .card-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .card-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; flex-shrink: 0;
+  }
+  .card-header h3 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.15rem; color: var(--navy);
+  }
+  .card-header p {
+    font-size: 0.82rem; color: var(--muted); font-weight: 600;
+  }
+
+  /* ── BASE SENTENCE ── */
+  .base-sentence {
+    background: var(--sky-light);
+    border: 2px solid var(--sky);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 1.05rem; font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .base-sentence span.highlight {
+    background: var(--gold);
+    border-radius: 4px;
+    padding: 0 4px;
+  }
+
+  /* ── EXPANDER PROMPTS ── */
+  .expander-row {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;
+  }
+  .expander-btn {
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: 50px;
+    padding: 6px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.82rem;
+    cursor: pointer; color: var(--navy);
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .expander-btn:hover {
+    background: var(--navy); color: var(--white);
+    border-color: var(--navy); transform: translateY(-1px);
+  }
+  .expander-btn .q { color: var(--pink); font-size: 0.9rem; }
+  .expander-btn:hover .q { color: var(--gold); }
+
+  /* ── TEXT AREA ── */
+  .write-area {
+    width: 100%; min-height: 80px;
+    border: 2.5px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 15px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    color: var(--text); background: var(--white);
+    resize: vertical; line-height: 1.6;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  .write-area:focus {
+    border-color: var(--sky);
+    box-shadow: 0 0 0 4px rgba(94,196,240,0.18);
+  }
+  .write-area::placeholder { color: #adb8d0; font-weight: 600; }
+
+  /* ── ACTION BUTTONS ── */
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  .btn {
+    border: none; cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800; font-size: 0.9rem;
+    padding: 10px 20px; border-radius: 50px;
+    transition: all 0.18s; display: flex; align-items: center; gap: 7px;
+  }
+  .btn-primary { background: var(--navy); color: var(--white); }
+  .btn-primary:hover { background: #1a3580; transform: translateY(-2px); box-shadow: var(--shadow); }
+  .btn-gold { background: var(--gold); color: var(--navy); }
+  .btn-gold:hover { background: var(--gold-dark); transform: translateY(-2px); box-shadow: 0 4px 14px rgba(245,200,66,0.5); }
+  .btn-green { background: var(--green); color: var(--white); }
+  .btn-green:hover { background: #22b36a; transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent; color: var(--navy);
+    border: 2px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--navy); background: #f0f4ff; }
+
+  /* ── FEEDBACK BOX ── */
+  .feedback-box {
+    border-radius: 12px; padding: 14px 18px; margin-top: 14px;
+    font-size: 0.93rem; font-weight: 700; line-height: 1.6;
+    display: none; animation: pop-in 0.3s ease;
+  }
+  @keyframes pop-in {
+    from { opacity: 0; transform: scale(0.95) translateY(4px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .feedback-box.success {
+    background: var(--green-light); color: #0f6840;
+    border: 2px solid var(--green); display: block;
+  }
+  .feedback-box.warn {
+    background: var(--pink-light); color: #8b1a45;
+    border: 2px solid var(--pink); display: block;
+  }
+  .feedback-box.info {
+    background: var(--sky-light); color: #0a4a70;
+    border: 2px solid var(--sky); display: block;
+  }
+
+  /* ── WORD BANK ── */
+  .word-bank {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;
+  }
+  .word-chip {
+    background: linear-gradient(135deg, #e8f0ff 0%, #dde8ff 100%);
+    border: 2px solid #b8caf0;
+    border-radius: 8px;
+    padding: 5px 13px;
+    font-weight: 700; font-size: 0.85rem;
+    cursor: pointer; color: var(--navy);
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .word-chip:hover {
+    background: var(--navy); color: var(--gold);
+    border-color: var(--navy); transform: translateY(-2px);
+  }
+  .word-chip.used {
+    background: #e8e8e8; color: #aaa; border-color: #ddd;
+    text-decoration: line-through; cursor: default;
+    transform: none;
+  }
+
+  /* ── LEVEL BADGE ── */
+  .level-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--navy); color: var(--gold);
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.8rem; padding: 3px 10px;
+    border-radius: 50px; margin-bottom: 10px;
+  }
+
+  /* ── PROGRESS STARS ── */
+  .stars-row {
+    display: flex; gap: 4px; margin-bottom: 12px;
+    align-items: center;
+  }
+  .star {
+    font-size: 1.4rem;
+    filter: grayscale(1) opacity(0.3);
+    transition: filter 0.3s, transform 0.3s;
+  }
+  .star.earned { filter: none; transform: scale(1.2); }
+  .stars-label { font-size: 0.82rem; font-weight: 700; color: var(--muted); margin-left: 8px; }
+
+  /* ── SCORE DISPLAY ── */
+  .score-display {
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3rem;
+    border-radius: 12px;
+    padding: 12px 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+  }
+
+  /* ── PEOPLE SECTION ── */
+  .person-card {
+    border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
+    border: 2.5px solid; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .person-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .person-card.katherine { background: #fff5e0; border-color: var(--gold-dark); }
+  .person-card.dorothy   { background: #e6fff4; border-color: var(--green); }
+  .person-card.mary      { background: #ffe8f3; border-color: var(--pink); }
+  .person-header { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+  .person-emoji { font-size: 2.5rem; }
+  .person-header h3 { font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: var(--navy); }
+  .person-header p { font-size: 0.83rem; font-weight: 700; color: var(--muted); }
+  .person-quote {
+    font-size: 0.95rem; line-height: 1.6; color: var(--text);
+    border-left: 4px solid var(--gold);
+    padding-left: 12px; margin-bottom: 12px; font-style: italic;
+  }
+  .person-fact {
+    background: rgba(255,255,255,0.7); border-radius: 8px;
+    padding: 8px 12px; font-size: 0.85rem; font-weight: 700;
+    color: var(--navy);
+  }
+
+  /* ── SENTENCE BUILDER ── */
+  .builder-slots {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; align-items: center;
+  }
+  .slot {
+    min-width: 90px;
+    border-radius: 10px; padding: 8px 14px;
+    font-weight: 700; font-size: 0.9rem; text-align: center;
+    border: 2px dashed; cursor: pointer; transition: all 0.2s;
+  }
+  .slot.who   { background: #fff5e0; border-color: var(--gold-dark); color: #7a5200; }
+  .slot.did   { background: #e6fff4; border-color: var(--green); color: #0a5c30; }
+  .slot.where { background: #ffe8f3; border-color: var(--pink); color: #7a1040; }
+  .slot.when  { background: #e8f0ff; border-color: var(--sky); color: #0a4a70; }
+  .slot.why   { background: #fff0e8; border-color: var(--orange); color: #7a3000; }
+  .slot.empty { background: #f5f7fb; border-color: var(--border); color: var(--muted); }
+  .slot:hover:not(.empty) { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .plus-connector {
+    font-size: 1.2rem; color: var(--muted); font-weight: 700;
+  }
+  .slot-options {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;
+  }
+  .slot-choice {
+    padding: 6px 14px; border-radius: 50px;
+    border: 2px solid var(--border); background: var(--white);
+    font-weight: 700; font-size: 0.83rem; cursor: pointer;
+    transition: all 0.15s; color: var(--navy);
+  }
+  .slot-choice:hover { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .slot-type-label {
+    font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 5px;
+    margin-top: 12px;
+  }
+
+  /* ── VOCAB ── */
+  .vocab-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;
+  }
+  .vocab-card {
+    border-radius: 12px; padding: 14px;
+    border: 2px solid var(--border); background: var(--card);
+    cursor: pointer; transition: all 0.2s; position: relative;
+  }
+  .vocab-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--sky); }
+  .vocab-word { font-family: 'Fredoka One', cursive; font-size: 1.1rem; color: var(--navy); margin-bottom: 4px; }
+  .vocab-type { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--sky); margin-bottom: 6px; }
+  .vocab-def { font-size: 0.85rem; line-height: 1.5; color: var(--text); }
+  .vocab-sentence { font-size: 0.82rem; color: var(--muted); font-style: italic; margin-top: 6px; border-top: 1px solid var(--border); padding-top: 6px; }
+  .vocab-flip { display: none; }
+  .vocab-card.flipped .vocab-front { display: none; }
+  .vocab-card.flipped .vocab-flip { display: block; }
+
+  /* ── CHALLENGE ── */
+  .challenge-q {
+    background: linear-gradient(135deg, #0d1b4b 0%, #1a3580 100%);
+    color: var(--white); border-radius: 14px;
+    padding: 20px 22px; margin-bottom: 16px;
+  }
+  .challenge-q .q-label {
+    font-size: 0.78rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--gold); margin-bottom: 8px;
+  }
+  .challenge-q p { font-size: 1rem; line-height: 1.6; font-weight: 600; }
+  .mc-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+  .mc-opt {
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: 10px; padding: 11px 16px;
+    cursor: pointer; font-weight: 700; font-size: 0.92rem;
+    transition: all 0.15s; text-align: left;
+    font-family: 'Nunito', sans-serif; color: var(--navy);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .mc-opt:hover { border-color: var(--sky); background: var(--sky-light); }
+  .mc-opt.correct { background: var(--green-light); border-color: var(--green); color: #0f6840; }
+  .mc-opt.wrong   { background: var(--pink-light); border-color: var(--pink); color: #8b1a45; }
+  .mc-opt .opt-letter {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--border); color: var(--navy);
+    font-weight: 800; font-size: 0.82rem;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .mc-opt.correct .opt-letter { background: var(--green); color: var(--white); }
+  .mc-opt.wrong   .opt-letter { background: var(--pink); color: var(--white); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar-wrap { margin-bottom: 20px; }
+  .progress-bar-label {
+    display: flex; justify-content: space-between;
+    font-size: 0.82rem; font-weight: 700; color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .progress-bar-track {
+    height: 12px; background: var(--border);
+    border-radius: 50px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%; background: linear-gradient(90deg, var(--sky), var(--green));
+    border-radius: 50px; transition: width 0.5s ease;
+  }
+
+  /* ── CELEBRATION ── */
+  .celebration {
+    text-align: center; padding: 30px;
+    display: none;
+  }
+  .celebration.show { display: block; animation: pop-in 0.4s ease; }
+  .celebration .big-emoji { font-size: 4rem; margin-bottom: 12px; display: block; }
+  .celebration h3 { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--navy); margin-bottom: 8px; }
+  .celebration p { color: var(--muted); font-weight: 700; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 520px) {
+    .header-inner { flex-wrap: wrap; }
+    .header-badge { margin-left: 0; }
+    .tab-btn { font-size: 0.78rem; padding: 11px 12px; }
+    .vocab-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── SCROLL SECTIONS ── */
+  .ex-section { margin-bottom: 28px; }
+  .ex-section-title {
+    font-family: 'Fredoka One', cursive; font-size: 1rem;
+    color: var(--navy); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;
+  }
+
+  /* nice scrollbar */
+  ::-webkit-scrollbar { width: 7px; height: 7px; }
+  ::-webkit-scrollbar-track { background: #e8edf8; }
+  ::-webkit-scrollbar-thumb { background: #b8caf0; border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-stars"></div>
+  <div class="header-inner">
+    <div class="rocket-icon">🚀</div>
+    <div class="header-text">
+      <h1>Sentence Lab — Hidden Figures</h1>
+      <p>Build bigger, better sentences like a NASA mathematician! 🌟</p>
+    </div>
+    <div class="header-badge" id="scoreDisplay">⭐ 0 pts</div>
+  </div>
+</header>
+
+<div class="tabs-bar">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="showTab('heroes')">👩🏾‍🔬 The Heroes</button>
+    <button class="tab-btn" onclick="showTab('builder')">🔧 Sentence Builder</button>
+    <button class="tab-btn" onclick="showTab('expander')">✏️ Expand It!</button>
+    <button class="tab-btn" onclick="showTab('vocab')">📚 Word Power</button>
+    <button class="tab-btn" onclick="showTab('challenge')">🏆 Challenge</button>
+  </div>
+</div>
+
+<main>
+
+  <!-- ══════════════ TAB 1: HEROES ══════════════ -->
+  <div id="tab-heroes" class="section active">
+    <div class="intro-card">
+      <h2>Meet the Hidden Figures! ✨</h2>
+      <p>Three incredible Black women worked as mathematicians at NASA in the 1950s and 60s. They helped send the first Americans into space — even though they faced unfair treatment because of their race. Their math skills and hard work changed history. Click each person to learn more!</p>
+    </div>
+
+    <div class="person-card katherine" onclick="selectPerson('katherine')">
+      <div class="person-header">
+        <div class="person-emoji">👩🏾‍💼</div>
+        <div>
+          <h3>Katherine Johnson</h3>
+          <p>Mathematician • "The Human Computer"</p>
+        </div>
+      </div>
+      <div class="person-quote">"In math, you're either right or you're wrong." — Katherine Johnson</div>
+      <div class="person-fact">🔢 Katherine's calculations helped astronaut John Glenn orbit Earth safely in 1962. He refused to fly until she personally checked the numbers!</div>
+    </div>
+
+    <div class="person-card dorothy" onclick="selectPerson('dorothy')">
+      <div class="person-header">
+        <div class="person-emoji">👩🏾‍💻</div>
+        <div>
+          <h3>Dorothy Vaughan</h3>
+          <p>Supervisor • Pioneer Programmer</p>
+        </div>
+      </div>
+      <div class="person-quote">Dorothy worked hard to get promotions — and when she finally got one, she made sure her whole team rose with her.</div>
+      <div class="person-fact">💻 Dorothy taught herself and her team to program NASA's new IBM computers before anyone else. She became one of the first computer programmers at NASA.</div>
+    </div>
+
+    <div class="person-card mary" onclick="selectPerson('mary')">
+      <div class="person-header">
+        <div class="person-emoji">👩🏾‍🚀</div>
+        <div>
+          <h3>Mary Jackson</h3>
+          <p>Engineer • Trailblazer</p>
+        </div>
+      </div>
+      <div class="person-quote">Mary didn't take "no" for an answer. She petitioned the city of Hampton just to take engineering classes — and she won.</div>
+      <div class="person-fact">🛸 Mary became NASA's first Black female engineer. She had to get special permission from a judge just to attend night school classes that were whites-only at the time!</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#fff5e0">🌍</div>
+        <div><h3>Why Does This Story Matter?</h3></div>
+      </div>
+      <p style="font-size:0.95rem;line-height:1.7;color:var(--text)">
+        In the 1950s–1960s, laws called <strong>Jim Crow laws</strong> kept Black and white people separated in many places. Katherine, Dorothy, and Mary had to use separate bathrooms, eat in separate cafeterias, and weren't always treated fairly at work. <em>Despite</em> all that, they solved math problems that no one else could. They proved that talent and hard work can break down unfair barriers. Their story was "hidden" for a long time — but now the world knows their names! 🌟
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════ TAB 2: SENTENCE BUILDER ══════════════ -->
+  <div id="tab-builder" class="section">
+    <div class="intro-card">
+      <h2>🔧 Build a Sentence Piece by Piece</h2>
+      <p>Every great sentence has parts: <strong>WHO</strong> did something, <strong>WHAT</strong> they did, and details that answer <em>Where? When? How? Why?</em> — Pick pieces below to build a sentence, then write your own!</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#fff5e0;">🏗️</div>
+        <div><h3>Sentence Workshop</h3><p>Click pieces to build — then check your sentence!</p></div>
+      </div>
+
+      <!-- Slot display -->
+      <div style="margin-bottom:14px">
+        <div style="font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px">Your sentence so far:</div>
+        <div class="builder-slots" id="sentenceSlots">
+          <div class="slot who" id="slot-who">WHO?</div>
+          <div class="plus-connector">+</div>
+          <div class="slot did" id="slot-did">DID WHAT?</div>
+          <div class="plus-connector">+</div>
+          <div class="slot where" id="slot-where">WHERE?</div>
+          <div class="plus-connector">+</div>
+          <div class="slot when" id="slot-when">WHEN?</div>
+          <div class="plus-connector">+</div>
+          <div class="slot why" id="slot-why">WHY?</div>
+        </div>
+        <div id="builtSentence" class="base-sentence" style="display:none;min-height:50px"></div>
+      </div>
+
+      <!-- WHO choices -->
+      <div class="slot-type-label">👤 WHO? (Subject)</div>
+      <div class="slot-options">
+        <button class="slot-choice" onclick="pickSlot('who', 'Katherine Johnson', this)">Katherine Johnson</button>
+        <button class="slot-choice" onclick="pickSlot('who', 'Dorothy Vaughan', this)">Dorothy Vaughan</button>
+        <button class="slot-choice" onclick="pickSlot('who', 'Mary Jackson', this)">Mary Jackson</button>
+        <button class="slot-choice" onclick="pickSlot('who', 'The three mathematicians', this)">The three mathematicians</button>
+      </div>
+
+      <!-- DID WHAT choices -->
+      <div class="slot-type-label">⚡ DID WHAT? (Verb / Action)</div>
+      <div class="slot-options">
+        <button class="slot-choice" onclick="pickSlot('did', 'calculated rocket paths', this)">calculated rocket paths</button>
+        <button class="slot-choice" onclick="pickSlot('did', 'programmed NASA\'s computers', this)">programmed NASA's computers</button>
+        <button class="slot-choice" onclick="pickSlot('did', 'solved impossible math problems', this)">solved impossible math problems</button>
+        <button class="slot-choice" onclick="pickSlot('did', 'earned the title of engineer', this)">earned the title of engineer</button>
+        <button class="slot-choice" onclick="pickSlot('did', 'proved their talents to the world', this)">proved their talents to the world</button>
+      </div>
+
+      <!-- WHERE choices -->
+      <div class="slot-type-label">📍 WHERE? (Place detail)</div>
+      <div class="slot-options">
+        <button class="slot-choice" onclick="pickSlot('where', 'at NASA\'s Langley Research Center', this)">at NASA's Langley Research Center</button>
+        <button class="slot-choice" onclick="pickSlot('where', 'in Hampton, Virginia', this)">in Hampton, Virginia</button>
+        <button class="slot-choice" onclick="pickSlot('where', 'in the West Computing section', this)">in the West Computing section</button>
+      </div>
+
+      <!-- WHEN choices -->
+      <div class="slot-type-label">🕐 WHEN? (Time detail)</div>
+      <div class="slot-options">
+        <button class="slot-choice" onclick="pickSlot('when', 'during the Space Race', this)">during the Space Race</button>
+        <button class="slot-choice" onclick="pickSlot('when', 'in the 1960s', this)">in the 1960s</button>
+        <button class="slot-choice" onclick="pickSlot('when', 'before the moon landing', this)">before the moon landing</button>
+        <button class="slot-choice" onclick="pickSlot('when', 'every single day', this)">every single day</button>
+      </div>
+
+      <!-- WHY choices -->
+      <div class="slot-type-label">💡 WHY? (Reason detail)</div>
+      <div class="slot-options">
+        <button class="slot-choice" onclick="pickSlot('why', 'because they never gave up', this)">because they never gave up</button>
+        <button class="slot-choice" onclick="pickSlot('why', 'even though others doubted them', this)">even though others doubted them</button>
+        <button class="slot-choice" onclick="pickSlot('why', 'so America could reach the stars', this)">so America could reach the stars</button>
+        <button class="slot-choice" onclick="pickSlot('why', 'to inspire future generations', this)">to inspire future generations</button>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="buildSentence()">✨ Show My Sentence!</button>
+        <button class="btn btn-outline" onclick="resetBuilder()">🔄 Start Over</button>
+      </div>
+      <div id="builderFeedback" class="feedback-box"></div>
+    </div>
+
+    <!-- Write your own -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:var(--green-light)">✍️</div>
+        <div><h3>Now Write Your Own!</h3><p>Use the parts above as a guide</p></div>
+      </div>
+      <div class="stars-row">
+        <div class="star" id="b-star1">⭐</div>
+        <div class="star" id="b-star2">⭐</div>
+        <div class="star" id="b-star3">⭐</div>
+        <div class="stars-label">Write a sentence with WHO + DID + one detail to earn stars!</div>
+      </div>
+      <textarea class="write-area" id="builderOwnSentence" placeholder="Type your own sentence about Katherine, Dorothy, or Mary here..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-green" onclick="checkBuilderSentence()">🌟 Check My Sentence</button>
+        <button class="btn btn-outline" onclick="clearBuilderOwn()">Clear</button>
+      </div>
+      <div id="builderOwnFeedback" class="feedback-box"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ TAB 3: EXPANDER ══════════════ -->
+  <div id="tab-expander" class="section">
+    <div class="intro-card">
+      <h2>✏️ Make Sentences Bigger & Better!</h2>
+      <p>Good writers don't just say what happened — they add <em>details</em> that paint a picture. Start with a simple sentence, then add details by answering the question prompts below. Each detail you add makes your writing stronger! 💪</p>
+    </div>
+
+    <!-- Exercise 1 -->
+    <div class="ex-section">
+      <div class="ex-section-title">
+        <span style="background:var(--gold);color:var(--navy);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;flex-shrink:0">1</span>
+        Katherine's Calculations
+      </div>
+      <div class="card">
+        <div class="level-badge">🌱 Level 1 — Add ONE detail</div>
+        <div style="font-size:0.82rem;font-weight:700;color:var(--muted);margin-bottom:8px">START WITH THIS SENTENCE:</div>
+        <div class="base-sentence">Katherine <span class="highlight">calculated</span> the numbers.</div>
+
+        <div style="font-size:0.82rem;font-weight:700;color:var(--navy);margin-bottom:8px">📌 Click a question to add a detail:</div>
+        <div class="expander-row">
+          <button class="expander-btn" onclick="insertHint('exp1', 'Where did she calculate?', 'at NASA\'s Langley Research Center')"><span class="q">❓</span>Where?</button>
+          <button class="expander-btn" onclick="insertHint('exp1', 'When did she calculate?', 'during the 1960s Space Race')"><span class="q">❓</span>When?</button>
+          <button class="expander-btn" onclick="insertHint('exp1', 'How did she calculate?', 'with incredible speed and accuracy')"><span class="q">❓</span>How?</button>
+          <button class="expander-btn" onclick="insertHint('exp1', 'Why did she calculate?', 'so that astronauts could return safely to Earth')"><span class="q">❓</span>Why?</button>
+        </div>
+        <div style="font-size:0.82rem;font-weight:700;color:var(--muted);margin-bottom:6px">YOUR EXPANDED SENTENCE:</div>
+        <textarea class="write-area" id="exp1" placeholder="Katherine calculated the numbers... (add a detail!)"></textarea>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="checkExpander('exp1', 'exp1-fb', 1)">Check It ✅</button>
+          <button class="btn btn-outline" onclick="document.getElementById('exp1').value=''">Clear</button>
+        </div>
+        <div id="exp1-fb" class="feedback-box"></div>
+      </div>
+    </div>
+
+    <!-- Exercise 2 -->
+    <div class="ex-section">
+      <div class="ex-section-title">
+        <span style="background:var(--green);color:var(--white);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;flex-shrink:0">2</span>
+        Dorothy's Leadership
+      </div>
+      <div class="card">
+        <div class="level-badge">🌿 Level 2 — Add TWO details</div>
+        <div style="font-size:0.82rem;font-weight:700;color:var(--muted);margin-bottom:8px">START WITH THIS SENTENCE:</div>
+        <div class="base-sentence">Dorothy <span class="highlight">taught</span> her team.</div>
+
+        <div style="font-size:0.82rem;font-weight:700;color:var(--navy);margin-bottom:8px">📌 Try adding TWO different details:</div>
+        <div class="expander-row">
+          <button class="expander-btn" onclick="insertHint('exp2', 'What did she teach?', 'to program IBM computers')"><span class="q">❓</span>What exactly?</button>
+          <button class="expander-btn" onclick="insertHint('exp2', 'When did she teach?', 'before most people even knew what programming was')"><span class="q">❓</span>When?</button>
+          <button class="expander-btn" onclick="insertHint('exp2', 'Why did she teach?', 'so her team would keep their jobs')"><span class="q">❓</span>Why?</button>
+          <button class="expander-btn" onclick="insertHint('exp2', 'Who did she teach?', 'the Black women in the West Computing section')"><span class="q">❓</span>Who?</button>
+        </div>
+        <div style="font-size:0.82rem;font-weight:700;color:var(--muted);margin-bottom:6px">YOUR EXPANDED SENTENCE (add TWO details):</div>
+        <textarea class="write-area" id="exp2" placeholder="Dorothy taught her team... (try adding two details!)"></textarea>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="checkExpander('exp2', 'exp2-fb', 2)">Check It ✅</button>
+          <button class="btn btn-outline" onclick="document.getElementById('exp2').value=''">Clear</button>
+        </div>
+        <div id="exp2-fb" class="feedback-box"></div>
+      </div>
+    </div>
+
+    <!-- Exercise 3 -->
+    <div class="ex-section">
+      <div class="ex-section-title">
+        <span style="background:var(--pink);color:var(--white);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;flex-shrink:0">3</span>
+        Mary's Determination
+      </div>
+      <div class="card">
+        <div class="level-badge">🌳 Level 3 — Add THREE details + a "because/even though" connector</div>
+        <div style="font-size:0.82rem;font-weight:700;color:var(--muted);margin-bottom:8px">START WITH THIS SENTENCE:</div>
+        <div class="base-sentence">Mary became an engineer.</div>
+
+        <div style="font-size:0.82rem;font-weight:700;color:var(--navy);margin-bottom:8px">📌 Word Bank — click to add to your sentence:</div>
+        <div class="word-bank" id="wbMary">
+          <div class="word-chip" onclick="addWordToExp('exp3', 'finally', this)">finally</div>
+          <div class="word-chip" onclick="addWordToExp('exp3', 'NASA\'s first Black female', this)">NASA's first Black female</div>
+          <div class="word-chip" onclick="addWordToExp('exp3', 'in 1958', this)">in 1958</div>
+          <div class="word-chip" onclick="addWordToExp('exp3', 'even though she faced many obstacles', this)">even though she faced many obstacles</div>
+          <div class="word-chip" onclick="addWordToExp('exp3', 'because she never stopped fighting for her dreams', this)">because she never stopped fighting</div>
+          <div class="word-chip" onclick="addWordToExp('exp3', 'after petitioning the city', this)">after petitioning the city</div>
+          <div class="word-chip" onclick="addWordToExp('exp3', 'at Langley Research Center', this)">at Langley</div>
+        </div>
+        <div style="font-size:0.82rem;font-weight:700;color:var(--muted);margin-bottom:6px">YOUR EXPANDED SENTENCE (aim for THREE details):</div>
+        <textarea class="write-area" id="exp3" placeholder="Mary became an engineer..."></textarea>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="checkExpander('exp3', 'exp3-fb', 3)">Check It ✅</button>
+          <button class="btn btn-outline" onclick="resetExp3()">Reset</button>
+        </div>
+        <div id="exp3-fb" class="feedback-box"></div>
+      </div>
+    </div>
+
+    <!-- Exercise 4 — Free Write -->
+    <div class="ex-section">
+      <div class="ex-section-title">
+        <span style="background:var(--orange);color:var(--white);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;flex-shrink:0">4</span>
+        Your Turn — Be the Writer!
+      </div>
+      <div class="card">
+        <div class="level-badge">🚀 Challenge — Write 3+ sentences about ONE of the women</div>
+        <div style="font-size:0.82rem;font-weight:700;color:var(--muted);margin-bottom:10px">
+          Choose a person below, then write 3 sentences. Each sentence must have at least one detail that answers WHERE, WHEN, HOW, or WHY.
+        </div>
+        <div class="profile-row" id="freeWritePerson">
+          <div class="profile-chip" onclick="selectFreeWrite('Katherine Johnson', this)">👩🏾‍💼 Katherine Johnson</div>
+          <div class="profile-chip" onclick="selectFreeWrite('Dorothy Vaughan', this)">👩🏾‍💻 Dorothy Vaughan</div>
+          <div class="profile-chip" onclick="selectFreeWrite('Mary Jackson', this)">👩🏾‍🚀 Mary Jackson</div>
+        </div>
+        <div id="freeWritePrompt" style="display:none;background:var(--sky-light);border:2px solid var(--sky);border-radius:10px;padding:12px;margin-bottom:12px;font-weight:700;font-size:0.9rem;color:var(--navy)"></div>
+        <textarea class="write-area" id="freeWrite" placeholder="Select a person above to get your writing prompt..." style="min-height:120px"></textarea>
+        <div class="btn-row">
+          <button class="btn btn-gold" onclick="checkFreeWrite()">✨ Submit My Writing!</button>
+          <button class="btn btn-outline" onclick="clearFreeWrite()">Clear</button>
+        </div>
+        <div id="freeWriteFeedback" class="feedback-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ TAB 4: VOCABULARY ══════════════ -->
+  <div id="tab-vocab" class="section">
+    <div class="intro-card">
+      <h2>📚 Word Power — Hidden Figures Vocabulary</h2>
+      <p>These are important words from the book. Click any card to flip it and see the word used in a sentence! Try to use 3 of these words in your writing today. 🎯</p>
+    </div>
+
+    <div id="vocabPoints" class="score-display" style="display:none">
+      🌟 Vocab Words Explored: <span id="vocabCount">0</span> / 12
+    </div>
+
+    <div class="vocab-grid" id="vocabGrid"></div>
+
+    <!-- Use a vocab word -->
+    <div class="card" style="margin-top:20px">
+      <div class="card-header">
+        <div class="card-icon" style="background:#ffe8f3">✍️</div>
+        <div><h3>Use a Vocab Word!</h3><p>Write a sentence using one of the words above</p></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <input id="vocabWordUsed" style="flex:1;min-width:160px;padding:9px 14px;border:2px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.9rem;outline:none" placeholder="Which vocab word? (e.g. calculate)">
+        <textarea class="write-area" id="vocabSentence" style="min-height:60px" placeholder="Write your sentence here..."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkVocabSentence()">✅ Check It!</button>
+      </div>
+      <div id="vocabFeedback" class="feedback-box"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ TAB 5: CHALLENGE ══════════════ -->
+  <div id="tab-challenge" class="section">
+    <div class="intro-card">
+      <h2>🏆 Hidden Figures Challenge!</h2>
+      <p>Test what you know about the book and practice your writing! Answer all 8 questions to earn your badge. 🚀</p>
+    </div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-label">
+        <span>Question <span id="qNum">1</span> of 8</span>
+        <span id="qScore">0 pts</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="qProgress" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div id="challengeArea"></div>
+
+    <div class="celebration" id="challengeDone">
+      <span class="big-emoji">🎉</span>
+      <h3>You finished the Challenge!</h3>
+      <p id="finalScore">Amazing work, mathematician!</p>
+      <div class="btn-row" style="justify-content:center;margin-top:16px">
+        <button class="btn btn-gold" onclick="restartChallenge()">🔄 Try Again</button>
+        <button class="btn btn-primary" onclick="showTab('expander')">✍️ Write More</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ─────────────────────────────────────
+//  GLOBAL STATE
+// ─────────────────────────────────────
+let totalScore = 0;
+let selectedPerson = null;
+let freeWritePersonName = null;
+let builderSlots = { who: null, did: null, where: null, when: null, why: null };
+let vocabFlipped = new Set();
+let challengeIndex = 0;
+let challengeScore = 0;
+let challengeAnswered = false;
+
+function addScore(pts) {
+  totalScore += pts;
+  document.getElementById('scoreDisplay').textContent = '⭐ ' + totalScore + ' pts';
+}
+
+// ─────────────────────────────────────
+//  TABS
+// ─────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ─────────────────────────────────────
+//  HEROES TAB
+// ─────────────────────────────────────
+function selectPerson(name) {
+  selectedPerson = name;
+}
+
+// ─────────────────────────────────────
+//  SENTENCE BUILDER
+// ─────────────────────────────────────
+function pickSlot(type, value, btn) {
+  builderSlots[type] = value;
+  const el = document.getElementById('slot-' + type);
+  el.textContent = value;
+  el.classList.remove('empty');
+  // highlight active buttons
+  const parent = btn.closest('.slot-options');
+  parent.querySelectorAll('.slot-choice').forEach(b => b.style.background = '');
+  btn.style.background = 'var(--gold)';
+  btn.style.borderColor = 'var(--gold-dark)';
+}
+
+function buildSentence() {
+  const parts = [];
+  if (builderSlots.who) parts.push(builderSlots.who);
+  if (builderSlots.did) parts.push(builderSlots.did);
+  if (builderSlots.where) parts.push(builderSlots.where);
+  if (builderSlots.when) parts.push(builderSlots.when);
+  if (builderSlots.why) parts.push(builderSlots.why);
+
+  if (parts.length < 2) {
+    showFeedback('builderFeedback', 'warn', '👀 You need at least WHO and DID WHAT to make a sentence. Pick some pieces!');
+    return;
+  }
+
+  let sentence = parts.join(', ');
+  sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1) + '.';
+  const el = document.getElementById('builtSentence');
+  el.textContent = '📝 ' + sentence;
+  el.style.display = 'block';
+
+  const wordCount = sentence.split(' ').length;
+  let msg = '';
+  if (parts.length >= 4) {
+    msg = '🚀 Excellent! You built a detailed sentence with ' + wordCount + ' words — that\'s advanced writing!';
+    showFeedback('builderFeedback', 'success', msg);
+    addScore(10);
+  } else if (parts.length === 3) {
+    msg = '✅ Nice job! Your sentence has a subject, action, and a detail. Can you add one more part?';
+    showFeedback('builderFeedback', 'info', msg);
+    addScore(5);
+  } else {
+    msg = '👍 Good start! You have WHO and DID WHAT. Try adding WHERE, WHEN, or WHY!';
+    showFeedback('builderFeedback', 'info', msg);
+    addScore(3);
+  }
+}
+
+function resetBuilder() {
+  builderSlots = { who: null, did: null, where: null, when: null, why: null };
+  ['who','did','where','when','why'].forEach(s => {
+    const el = document.getElementById('slot-' + s);
+    el.textContent = s.toUpperCase() + '?';
+  });
+  document.getElementById('builtSentence').style.display = 'none';
+  document.getElementById('builderFeedback').className = 'feedback-box';
+  document.querySelectorAll('.slot-choice').forEach(b => {
+    b.style.background = ''; b.style.borderColor = '';
+  });
+}
+
+function checkBuilderSentence() {
+  const val = document.getElementById('builderOwnSentence').value.trim();
+  if (val.length < 10) {
+    showFeedback('builderOwnFeedback', 'warn', '✏️ Write at least one complete sentence!');
+    return;
+  }
+  const words = val.split(' ').length;
+  const hasCapital = val[0] === val[0].toUpperCase();
+  const hasPunct = /[.!?]$/.test(val);
+  const hasDetail = /\b(at|in|during|because|so that|even though|after|before|when|where|how|with)\b/i.test(val);
+  const hasName = /Katherine|Dorothy|Mary|mathematician|NASA|calculate|program|engineer/i.test(val);
+
+  let stars = 0;
+  let msgs = [];
+
+  if (words >= 6) { stars++; msgs.push('✅ Great length (' + words + ' words)!'); }
+  else msgs.push('💡 Try writing a longer sentence — aim for 8+ words!');
+
+  if (hasDetail) { stars++; msgs.push('✅ You added a detail (where/when/why) — that\'s a strong sentence!'); }
+  else msgs.push('💡 Add a detail: WHERE did it happen? WHEN? WHY?');
+
+  if (hasCapital && hasPunct) { stars++; msgs.push('✅ Perfect — capital letter and punctuation!'); }
+  else {
+    if (!hasCapital) msgs.push('⚠️ Start your sentence with a capital letter.');
+    if (!hasPunct) msgs.push('⚠️ End your sentence with a period, !, or ?');
+  }
+
+  // Update stars
+  ['b-star1','b-star2','b-star3'].forEach((id, i) => {
+    document.getElementById(id).classList.toggle('earned', i < stars);
+  });
+
+  const type = stars === 3 ? 'success' : stars >= 1 ? 'info' : 'warn';
+  showFeedback('builderOwnFeedback', type, msgs.join(' '));
+  if (stars > 0) addScore(stars * 3);
+}
+
+function clearBuilderOwn() {
+  document.getElementById('builderOwnSentence').value = '';
+  document.getElementById('builderOwnFeedback').className = 'feedback-box';
+  ['b-star1','b-star2','b-star3'].forEach(id => document.getElementById(id).classList.remove('earned'));
+}
+
+// ─────────────────────────────────────
+//  EXPANDER TAB
+// ─────────────────────────────────────
+function insertHint(id, question, hint) {
+  const ta = document.getElementById(id);
+  if (!ta.value.trim()) {
+    ta.value = '';
+  }
+  ta.value = ta.value + (ta.value && !ta.value.endsWith(' ') ? ' ' : '') + hint;
+  ta.focus();
+}
+
+function addWordToExp(id, word, chip) {
+  const ta = document.getElementById(id);
+  ta.value = ta.value + (ta.value && !ta.value.endsWith(' ') ? ' ' : '') + word;
+  chip.classList.add('used');
+  ta.focus();
+}
+
+function resetExp3() {
+  document.getElementById('exp3').value = '';
+  document.getElementById('exp3-fb').className = 'feedback-box';
+  document.querySelectorAll('#wbMary .word-chip').forEach(c => c.classList.remove('used'));
+}
+
+function countDetails(text) {
+  const detailWords = ['at','in','during','because','so that','even though','after','before','when','where','how','with','finally','before','after'];
+  return detailWords.filter(w => text.toLowerCase().includes(w)).length;
+}
+
+function checkExpander(id, fbId, level) {
+  const val = document.getElementById(id).value.trim();
+  if (val.length < 8) {
+    showFeedback(fbId, 'warn', '✏️ Write a sentence first!');
+    return;
+  }
+  const words = val.split(' ').length;
+  const details = countDetails(val);
+  const hasCapital = val[0] === val[0].toUpperCase();
+  const hasPunct = /[.!?]$/.test(val);
+
+  let feedback = [];
+  let ok = false;
+
+  if (level === 1) {
+    if (words >= 8 && details >= 1) {
+      feedback.push('🌟 Excellent! You expanded the sentence with a detail!');
+      ok = true; addScore(5);
+    } else if (details >= 1) {
+      feedback.push('✅ Good — you added a detail. Try making it a bit longer!');
+      ok = true; addScore(3);
+    } else {
+      feedback.push('💡 Add a detail: WHERE, WHEN, HOW, or WHY? Try clicking one of the question buttons!');
+    }
+  } else if (level === 2) {
+    if (words >= 10 && details >= 2) {
+      feedback.push('🚀 Amazing! Two details — your sentence really paints a picture!');
+      ok = true; addScore(8);
+    } else if (details >= 1) {
+      feedback.push('✅ Good — one detail found! Try adding a second detail for Level 2.');
+      addScore(4);
+    } else {
+      feedback.push('💡 Remember: Level 2 needs TWO details. Click two question buttons!');
+    }
+  } else if (level === 3) {
+    const hasConnector = /because|even though|so that|although|since/i.test(val);
+    if (details >= 2 && hasConnector) {
+      feedback.push('🎉 Outstanding! Three details AND a connector word (because/even though) — that\'s pro-level writing!');
+      ok = true; addScore(12);
+    } else if (details >= 2) {
+      feedback.push('✅ Great — lots of details! Try adding "because" or "even though" to connect your ideas.');
+      addScore(7);
+    } else {
+      feedback.push('💡 Level 3 needs three details. Use the Word Bank chips to help build your sentence!');
+    }
+  }
+
+  if (!hasCapital) feedback.push('⚠️ Remember: start with a capital letter.');
+  if (!hasPunct) feedback.push('⚠️ Add a period or ! at the end.');
+
+  const type = ok ? 'success' : details >= 1 ? 'info' : 'warn';
+  showFeedback(fbId, type, feedback.join(' '));
+}
+
+// Free Write
+function selectFreeWrite(name, chip) {
+  freeWritePersonName = name;
+  document.querySelectorAll('#freeWritePerson .profile-chip').forEach(c => c.classList.remove('selected'));
+  chip.classList.add('selected');
+  const prompts = {
+    'Katherine Johnson': '📝 Write 3 sentences about Katherine Johnson. Tell us: (1) What was she great at? (2) What famous thing did she do? (3) Why was she so important?',
+    'Dorothy Vaughan': '📝 Write 3 sentences about Dorothy Vaughan. Tell us: (1) What new skill did she learn? (2) What did she do for her team? (3) Why was she a great leader?',
+    'Mary Jackson': '📝 Write 3 sentences about Mary Jackson. Tell us: (1) What was her goal? (2) What did she have to fight for? (3) Why was she brave?'
+  };
+  const el = document.getElementById('freeWritePrompt');
+  el.textContent = prompts[name];
+  el.style.display = 'block';
+  document.getElementById('freeWrite').placeholder = 'Start writing about ' + name + '...';
+}
+
+function checkFreeWrite() {
+  const val = document.getElementById('freeWrite').value.trim();
+  if (!freeWritePersonName) {
+    showFeedback('freeWriteFeedback', 'warn', '👆 First, click a person\'s name above to choose who you\'re writing about!');
+    return;
+  }
+  if (val.length < 30) {
+    showFeedback('freeWriteFeedback', 'warn', '✏️ Write at least 3 complete sentences!');
+    return;
+  }
+  const sentences = val.split(/[.!?]+/).filter(s => s.trim().length > 3).length;
+  const details = countDetails(val);
+  const words = val.split(' ').length;
+
+  let feedback = [];
+  let pts = 0;
+
+  if (sentences >= 3) { feedback.push('✅ Three sentences — great job!'); pts += 5; }
+  else feedback.push('💡 Try to write ' + (3 - sentences) + ' more sentence(s).');
+
+  if (details >= 2) { feedback.push('🌟 Love those details — your writing really comes to life!'); pts += 8; }
+  else if (details === 1) { feedback.push('✅ One detail found! Add one more WHERE, WHEN, or WHY.'); pts += 3; }
+  else feedback.push('💡 Add details: WHERE did things happen? WHEN? WHY?');
+
+  if (words >= 40) { feedback.push('🚀 Wow — ' + words + ' words! That\'s strong, detailed writing!'); pts += 5; }
+
+  if (pts > 0) addScore(pts);
+  const type = pts >= 10 ? 'success' : pts >= 5 ? 'info' : 'warn';
+  showFeedback('freeWriteFeedback', type, feedback.join(' '));
+}
+
+function clearFreeWrite() {
+  document.getElementById('freeWrite').value = '';
+  document.getElementById('freeWriteFeedback').className = 'feedback-box';
+}
+
+// ─────────────────────────────────────
+//  VOCABULARY TAB
+// ─────────────────────────────────────
+const vocabData = [
+  { word: 'calculate', type: 'verb', def: 'To use math to figure out an answer or solve a problem', sentence: 'Katherine had to calculate the exact path the rocket needed to travel.' },
+  { word: 'trajectory', type: 'noun', def: 'The path that something (like a rocket) travels through the air or space', sentence: 'The scientists worked all night to get the rocket\'s trajectory just right.' },
+  { word: 'mathematician', type: 'noun', def: 'A person who is an expert at math', sentence: 'Dorothy was one of the most talented mathematicians at NASA.' },
+  { word: 'segregation', type: 'noun', def: 'The unfair practice of keeping people separated because of their race', sentence: 'Because of segregation, the Black computers had to use different bathrooms.' },
+  { word: 'perseverance', type: 'noun', def: 'Keeping going even when things are really hard', sentence: 'Mary\'s perseverance helped her become NASA\'s first Black female engineer.' },
+  { word: 'computing', type: 'noun/verb', def: 'Doing math calculations (at the time, "computers" were people!)', sentence: 'The women in the West Computing section solved problems by hand.' },
+  { word: 'orbit', type: 'noun/verb', def: 'To travel in a circle around a planet or star', sentence: 'John Glenn needed Katherine\'s math to orbit Earth safely.' },
+  { word: 'discrimination', type: 'noun', def: 'Treating someone unfairly because of their race, gender, or background', sentence: 'The women faced discrimination every day, but they kept working hard.' },
+  { word: 'innovative', type: 'adjective', def: 'Using new and creative ideas to solve problems', sentence: 'Dorothy\'s innovative thinking helped NASA prepare for the computer age.' },
+  { word: 'petition', type: 'verb/noun', def: 'To make a formal request for a change', sentence: 'Mary petitioned the city so she could attend engineering classes.' },
+  { word: 'barrier', type: 'noun', def: 'Something that blocks you from moving forward or reaching a goal', sentence: 'Despite every barrier placed in their way, the women succeeded.' },
+  { word: 'precision', type: 'noun', def: 'Being very exact and careful — no mistakes allowed!', sentence: 'Katherine\'s precision made her the most trusted person in the room.' }
+];
+
+function buildVocabGrid() {
+  const grid = document.getElementById('vocabGrid');
+  grid.innerHTML = '';
+  vocabData.forEach((v, i) => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.onclick = () => flipVocab(i, card);
+    card.innerHTML = `
+      <div class="vocab-front">
+        <div class="vocab-word">${v.word}</div>
+        <div class="vocab-type">${v.type}</div>
+        <div class="vocab-def">${v.def}</div>
+        <div style="margin-top:8px;font-size:0.78rem;font-weight:700;color:var(--sky)">👆 Click to see an example!</div>
+      </div>
+      <div class="vocab-flip">
+        <div class="vocab-word" style="color:var(--green)">${v.word}</div>
+        <div class="vocab-sentence">📖 "${v.sentence}"</div>
+        <div style="margin-top:8px;font-size:0.78rem;font-weight:700;color:var(--muted)">Click again to flip back</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function flipVocab(i, card) {
+  card.classList.toggle('flipped');
+  if (!vocabFlipped.has(i)) {
+    vocabFlipped.add(i);
+    const count = vocabFlipped.size;
+    document.getElementById('vocabCount').textContent = count;
+    document.getElementById('vocabPoints').style.display = 'flex';
+    addScore(2);
+  }
+}
+
+function checkVocabSentence() {
+  const word = document.getElementById('vocabWordUsed').value.trim().toLowerCase();
+  const sentence = document.getElementById('vocabSentence').value.trim();
+  if (!word || sentence.length < 10) {
+    showFeedback('vocabFeedback', 'warn', '✏️ Enter the vocab word AND write a sentence!');
+    return;
+  }
+  const knownWords = vocabData.map(v => v.word.toLowerCase());
+  if (!knownWords.includes(word)) {
+    showFeedback('vocabFeedback', 'warn', '🤔 That word isn\'t in our vocab list! Try one of the 12 words from the cards above.');
+    return;
+  }
+  if (!sentence.toLowerCase().includes(word)) {
+    showFeedback('vocabFeedback', 'warn', '💡 Make sure you actually USE the word "' + word + '" in your sentence!');
+    return;
+  }
+  const words = sentence.split(' ').length;
+  if (words < 7) {
+    showFeedback('vocabFeedback', 'info', '✅ You used the word correctly! Try making the sentence a bit longer to show you really understand it.');
+    addScore(3);
+    return;
+  }
+  showFeedback('vocabFeedback', 'success', '🌟 Fantastic! You used "' + word + '" correctly in a strong sentence! That\'s +'+ 8 +' points!');
+  addScore(8);
+}
+
+// ─────────────────────────────────────
+//  CHALLENGE TAB
+// ─────────────────────────────────────
+const questions = [
+  {
+    type: 'mc',
+    q: 'Katherine Johnson worked at NASA as a _____.',
+    opts: ['A pilot who flew rockets', 'A mathematician who calculated paths for rockets', 'A doctor who helped astronauts', 'A teacher who trained new workers'],
+    answer: 1,
+    exp: 'Katherine was a mathematician — she calculated the exact paths rockets needed to travel!'
+  },
+  {
+    type: 'mc',
+    q: 'What new skill did Dorothy Vaughan teach herself and her team?',
+    opts: ['How to build rockets by hand', 'How to fly airplanes', 'How to program IBM computers', 'How to speak Russian'],
+    answer: 2,
+    exp: 'Dorothy taught herself and her whole team to program IBM computers before most people at NASA even knew how!'
+  },
+  {
+    type: 'mc',
+    q: 'Mary Jackson had to petition the city of Hampton to ___.',
+    opts: ['Get a parking spot at NASA', 'Attend engineering classes that were whites-only at the time', 'Use the main cafeteria', 'Get a raise in her salary'],
+    answer: 1,
+    exp: 'Because of segregation, Mary had to get special permission just to attend night school engineering classes!'
+  },
+  {
+    type: 'mc',
+    q: 'John Glenn refused to fly until Katherine Johnson personally checked ___.',
+    opts: ['His spacesuit was clean', 'The rocket engine was working', 'The math calculations for his orbit', 'The weather forecast'],
+    answer: 2,
+    exp: 'John Glenn trusted Katherine\'s math so much that he refused to fly until she double-checked the computer\'s numbers!'
+  },
+  {
+    type: 'write',
+    q: 'Expand this sentence by adding at least TWO details (where, when, how, or why):\n\n"Katherine worked hard."',
+    check: (val) => {
+      const details = countDetails(val);
+      const words = val.split(' ').length;
+      if (details >= 2 && words >= 10) return { ok: true, msg: '🚀 Excellent expansion! You added ' + details + ' details — great work!' };
+      if (details >= 1) return { ok: false, msg: '✅ Good start! You added 1 detail. Add one more to get full credit.' };
+      return { ok: false, msg: '💡 Try adding WHERE she worked, WHEN she worked, or WHY she worked so hard.' };
+    }
+  },
+  {
+    type: 'mc',
+    q: 'Which word BEST describes how Katherine, Dorothy, and Mary handled unfair treatment at work?',
+    opts: ['Angry and quit their jobs', 'Persistent — they kept working and proved themselves', 'Scared and asked to leave NASA', 'Happy because everyone treated them nicely'],
+    answer: 1,
+    exp: 'Despite facing discrimination, all three women stayed and proved their talents. That\'s called perseverance!'
+  },
+  {
+    type: 'mc',
+    q: 'What does the word "segregation" mean in this story?',
+    opts: ['Working in a special math room', 'Being kept apart from others because of your race', 'A type of rocket calculation', 'Working on the same team as everyone else'],
+    answer: 1,
+    exp: 'Segregation meant Black and white people were kept separate — different bathrooms, cafeterias, and sometimes even different buildings.'
+  },
+  {
+    type: 'write',
+    q: 'In 2-3 sentences, explain WHY Katherine Johnson, Dorothy Vaughan, and Mary Jackson are important to American history. Use at least one vocab word.',
+    check: (val) => {
+      const sentences = val.split(/[.!?]+/).filter(s => s.trim().length > 3).length;
+      const knownWords = vocabData.map(v => v.word.toLowerCase());
+      const usedVocab = knownWords.some(w => val.toLowerCase().includes(w));
+      const words = val.split(' ').length;
+      if (sentences >= 2 && usedVocab && words >= 25) {
+        return { ok: true, msg: '🎉 Brilliant! You explained their importance and used a vocab word — that\'s excellent writing!' };
+      }
+      if (sentences >= 2) return { ok: false, msg: '✅ Great explanation! Try adding one vocab word (like "perseverance", "barrier", or "precision").' };
+      return { ok: false, msg: '💡 Write at least 2 full sentences. What did they do? Why does it matter?' };
+    }
+  }
+];
+
+function buildChallenge() {
+  const q = questions[challengeIndex];
+  const area = document.getElementById('challengeArea');
+  area.innerHTML = '';
+  challengeAnswered = false;
+
+  const div = document.createElement('div');
+  if (q.type === 'mc') {
+    div.innerHTML = `
+      <div class="challenge-q">
+        <div class="q-label">Question ${challengeIndex + 1} of ${questions.length}</div>
+        <p>${q.q}</p>
+      </div>
+      <div class="mc-options" id="mcOpts">
+        ${q.opts.map((o, i) => `<button class="mc-opt" onclick="answerMC(${i})" id="opt-${i}">
+          <span class="opt-letter">${'ABCD'[i]}</span>${o}</button>`).join('')}
+      </div>
+      <div id="qFeedback" class="feedback-box"></div>`;
+  } else {
+    div.innerHTML = `
+      <div class="challenge-q">
+        <div class="q-label">Question ${challengeIndex + 1} of ${questions.length} — Writing Challenge</div>
+        <p style="white-space:pre-line">${q.q}</p>
+      </div>
+      <textarea class="write-area" id="writeAnswer" placeholder="Write your answer here..." style="min-height:90px"></textarea>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn btn-gold" onclick="answerWrite()">Submit ✅</button>
+      </div>
+      <div id="qFeedback" class="feedback-box"></div>`;
+  }
+  area.appendChild(div);
+  updateChallengeProgress();
+}
+
+function answerMC(chosen) {
+  if (challengeAnswered) return;
+  challengeAnswered = true;
+  const q = questions[challengeIndex];
+  const opts = document.querySelectorAll('.mc-opt');
+  opts.forEach((o, i) => {
+    o.disabled = true;
+    if (i === q.answer) o.classList.add('correct');
+    else if (i === chosen) o.classList.add('wrong');
+  });
+  if (chosen === q.answer) {
+    challengeScore += 10;
+    addScore(10);
+    showFeedback('qFeedback', 'success', '✅ Correct! ' + q.exp);
+  } else {
+    showFeedback('qFeedback', 'warn', '❌ Not quite! ' + q.exp);
+  }
+  setTimeout(advanceChallenge, 2400);
+}
+
+function answerWrite() {
+  if (challengeAnswered) return;
+  const val = document.getElementById('writeAnswer').value.trim();
+  if (val.length < 10) { showFeedback('qFeedback', 'warn', '✏️ Write a more complete answer!'); return; }
+  challengeAnswered = true;
+  const q = questions[challengeIndex];
+  const result = q.check(val);
+  if (result.ok) { challengeScore += 15; addScore(15); }
+  else { challengeScore += 5; addScore(5); }
+  showFeedback('qFeedback', result.ok ? 'success' : 'info', result.msg);
+  setTimeout(advanceChallenge, 2800);
+}
+
+function advanceChallenge() {
+  challengeIndex++;
+  updateChallengeProgress();
+  if (challengeIndex >= questions.length) {
+    document.getElementById('challengeArea').style.display = 'none';
+    const done = document.getElementById('challengeDone');
+    done.classList.add('show');
+    const grade = challengeScore >= 80 ? '🚀 Rocket-Level Writer!' :
+                  challengeScore >= 50 ? '⭐ Star Mathematician!' : '👍 Great effort — keep going!';
+    document.getElementById('finalScore').textContent = 'You scored ' + challengeScore + ' points! ' + grade;
+    return;
+  }
+  buildChallenge();
+}
+
+function updateChallengeProgress() {
+  const pct = (challengeIndex / questions.length) * 100;
+  document.getElementById('qProgress').style.width = pct + '%';
+  document.getElementById('qNum').textContent = Math.min(challengeIndex + 1, questions.length);
+  document.getElementById('qScore').textContent = challengeScore + ' pts';
+}
+
+function restartChallenge() {
+  challengeIndex = 0;
+  challengeScore = 0;
+  challengeAnswered = false;
+  document.getElementById('challengeArea').style.display = 'block';
+  document.getElementById('challengeDone').classList.remove('show');
+  buildChallenge();
+}
+
+// ─────────────────────────────────────
+//  SHARED HELPERS
+// ─────────────────────────────────────
+function showFeedback(id, type, msg) {
+  const el = document.getElementById(id);
+  el.className = 'feedback-box ' + type;
+  el.textContent = msg;
+}
+
+// ─────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────
+buildVocabGrid();
+buildChallenge();
+</script>
+</body>
+</html>
